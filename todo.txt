@@ -1,0 +1,6 @@
+- compléter README FR/EN
+- ajouter référence à https://github.com/DeveloppeurPascal/LogNPass4PHP
+- ajouter référence à https://github.com/DeveloppeurPascal/PHP-UserPassword-2FA-With-LogNPass
+- changer commentaires, copyright et lien du dépôt dans les entêtes de fichiers PHP
+
+- fourniture de codes uniques de déverrouillage
