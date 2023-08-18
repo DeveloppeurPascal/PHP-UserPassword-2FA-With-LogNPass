@@ -13,6 +13,7 @@
 		print("<button onclick=\"document.location = 'index.php'; return true;\">Home</button> ");
 		if (hasCurrentUser()) {
 			print("<button onclick=\"document.location = 'chgpassword.php'; return true;\">Change password</button> ");
+			print("<button onclick=\"document.location = 'lognpass-set.php'; return true;\">Log'n Pass 2FA</button> ");
 			print("<button onclick=\"document.location = 'logout.php'; return true;\">Log out</button> ");
 		}
 		else {
