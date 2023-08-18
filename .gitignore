@@ -98,3 +98,6 @@ config-release.inc.php
 
 # cache and temporary files
 *.tmp
+
+# temporary Log'n Pass files
+*.lnp
