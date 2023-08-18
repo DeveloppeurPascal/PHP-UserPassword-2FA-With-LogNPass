@@ -99,7 +99,7 @@
 
 	switch ($LogNPassStatus) {
 		case CLogNPassForm:
-?><form method="POST" action="lognpass-set.php" onXXSubmit="return ValidForm();"><input type="hidden" name="frm" value="1">
+?><form method="POST" action="lognpass-set.php" onSubmit="return ValidForm();"><input type="hidden" name="frm" value="1">
 	<p>
 		<label for="LNPPhrase">Secret phrase</label><br>
 		<input id="LNPPhrase" name="phrase" type="text" value="<?php print(isset($phrase)?htmlspecialchars($phrase):""); ?>" prompt="Your secret phrase (the same than in Log'n Pass app)">
@@ -121,7 +121,7 @@
 			return false;
 		}
 		code = document.getElementById('LNPCode');
-		if (0 == pwd.value.length) {
+		if (0 == code.value.length) {
 			code.focus();
 			window.alert('Log\'n Pass code needed !');
 			return false;
