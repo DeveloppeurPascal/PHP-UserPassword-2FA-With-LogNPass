@@ -66,6 +66,7 @@
 							$_SESSION["temp_id"] = $rec->id;
 							$_SESSION["temp_email"] = $email;
 							$LoginStatus = CLogNPassForm;
+							$DefaultField = "LNPCode";
 						}
 						else {
 							setCurrentUserId($rec->id);
@@ -80,11 +81,11 @@
 	}
 	else if (isset($_POST["frm"]) && ("2" == $_POST["frm"])) {
 		$LoginStatus = CLogNPassForm;
+		$DefaultField = "LNPCode";
 		$code = isset($_POST["code"])?trim(strip_tags($_POST["code"])):"";
 		if (empty($code)) {
 			$error = true;
 			$error_message .= "Fill the Log'n Pass code.\n";
-			$DefaultField = "LNPCode";
 		}
 		else if (isset($_SESSION["temp_id"]) && isset($_SESSION["temp_email"])) {
 			$id = $_SESSION["temp_id"];
