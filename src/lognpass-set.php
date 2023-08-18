@@ -19,6 +19,7 @@
 
 	define("CLogNPassForm", 1);
 	define("CLogNPassOk", 2);
+	define("CLogNPassDisabled", 3);
 	
 	$LogNPassStatus = CLogNPassForm;
 
@@ -77,6 +78,31 @@
 			}
 		}
 	}
+	else if (isset($_POST["frm"]) && ("2" == $_POST["frm"])) {
+		$db = getPDOConnection();
+		if (! is_object($db)) {
+			$error = true;
+			$error_message .= "Database access error. Contact the administrator.\n";
+		}
+		else {
+			$qry = $db->prepare("select enabled, comp from users where id=:id");
+			$qry->execute(array(":id" => getCurrentUserId()));
+			if (false === ($rec = $qry->fetch(PDO::FETCH_OBJ))) {
+				$error = true;
+				$error_message .= "Unknown user.\n";
+			}
+			else if (1 != $rec->enabled) {
+				$error = true;
+				$error_message .= "Access denied.\n";
+			}
+			else {
+				unsetUserCompKey($rec->comp, "lognpass_phrase");
+				$qry = $db->prepare("update users set comp=:comp where id=:id");
+				$qry->execute(array(":comp" => $rec->comp, ":id" => getCurrentUserId()));
+				$LogNPassStatus = CLogNPassDisabled;
+			}
+		}
+	}
 ?><!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -99,7 +125,7 @@
 
 	switch ($LogNPassStatus) {
 		case CLogNPassForm:
-?><form method="POST" action="lognpass-set.php" onSubmit="return ValidForm();"><input type="hidden" name="frm" value="1">
+?><form id="MyForm" method="POST" action="lognpass-set.php" onSubmit="return ValidForm();"><input id="Frm" type="hidden" name="frm" value="1">
 	<p>
 		<label for="LNPPhrase">Secret phrase</label><br>
 		<input id="LNPPhrase" name="phrase" type="text" value="<?php print(isset($phrase)?htmlspecialchars($phrase):""); ?>" prompt="Your secret phrase (the same than in Log'n Pass app)">
@@ -110,6 +136,9 @@
 	</p>
 	<p>
 		<button type="submit">Activate Log'n Pass on my account</button>
+	</p>
+	<p>
+		<button type="button" onClick="return UnsetLogNPass();">Remove Log'n Pass on my account</button>
 	</p>
 </form><script>
 	document.getElementById('<?php print($DefaultField); ?>').focus();
@@ -128,10 +157,18 @@
 		}
 		return true;
 	}
+	function UnsetLogNPass() {
+		document.getElementById('Frm').value = '2';
+		document.getElementById('MyForm').onSubmit = ()=>{ return true; };
+		document.getElementById('MyForm').submit();
+	}
 </script><?php
 			break;
 		case CLogNPassOk:
 ?><p>Log'n Pass is activated on your account. Don't forget your pass phrase or your account will be blocked.</p><?php
+			break;
+		case CLogNPassDisabled:
+?><p>Log'n Pass has been removed from your account.</p><?php
 			break;
 		default :
 	}
